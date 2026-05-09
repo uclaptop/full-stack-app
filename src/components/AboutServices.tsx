@@ -61,7 +61,7 @@ export const About = () => {
                 affordable pricing.
               </p>
 
-              <div className="grid grid-cols-3 gap-8 p-12 bg-black/5 border border-black/10 rounded-[40px]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 p-8 sm:p-12 bg-black/5 border border-black/10 rounded-[40px]">
                 <CountUp to="1k+" label="Customers" />
                 <CountUp to="500+" label="Models" />
                 <CountUp to="#1" label="Rated" />

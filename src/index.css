@@ -62,3 +62,179 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
 }
+
+/* Premium Light Theme Override for Admin Panel */
+.admin-theme-light {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.admin-theme-light h1,
+.admin-theme-light h2,
+.admin-theme-light h3,
+.admin-theme-light h4,
+.admin-theme-light span,
+.admin-theme-light td,
+.admin-theme-light th,
+.admin-theme-light label {
+  color: #0F172A !important;
+}
+
+.admin-theme-light p {
+  color: #475569 !important;
+}
+
+/* Sidebar overrides - keeping it deep navy slate for high-end professional appearance */
+.admin-theme-light aside {
+  background-color: #0F172A !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.admin-theme-light aside * {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.admin-theme-light aside div,
+.admin-theme-light aside span {
+  color: #FFFFFF !important;
+}
+
+.admin-theme-light aside .text-gray-500,
+.admin-theme-light aside .text-gray-400 {
+  color: #94A3B8 !important;
+}
+
+.admin-theme-light aside button[data-active="true"] {
+  background-color: rgba(37, 99, 235, 0.15) !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+.admin-theme-light aside button[data-active="true"] * {
+  color: #60A5FA !important; /* light blue highlight */
+}
+
+/* Content Area Overrides */
+.admin-theme-light header {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+
+.admin-theme-light header * {
+  color: #0F172A !important;
+}
+
+.admin-theme-light header span {
+  background-color: #EFF6FF !important;
+  border-color: #DBEAFE !important;
+  color: #2563EB !important;
+}
+
+/* Table overrides */
+.admin-theme-light table {
+  background-color: #FFFFFF !important;
+}
+
+.admin-theme-light thead tr {
+  border-bottom: 1px solid #E2E8F0 !important;
+  background-color: #F1F5F9 !important;
+}
+
+.admin-theme-light thead tr th {
+  color: #475569 !important;
+}
+
+.admin-theme-light tbody tr {
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.admin-theme-light tbody tr:hover {
+  background-color: #F8FAFC !important;
+}
+
+.admin-theme-light tbody tr td {
+  color: #0F172A !important;
+}
+
+.admin-theme-light tbody tr td span {
+  color: #0F172A !important;
+}
+
+/* Card and Container overrides */
+.admin-theme-light .bg-\[\#111218\] {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05) !important;
+}
+
+.admin-theme-light .border-white\/5,
+.admin-theme-light .border-white\/10 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Input Overrides */
+.admin-theme-light input,
+.admin-theme-light textarea,
+.admin-theme-light select {
+  background-color: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.admin-theme-light input:focus,
+.admin-theme-light textarea:focus,
+.admin-theme-light select:focus {
+  border-color: #2563EB !important;
+  background-color: #FFFFFF !important;
+}
+
+/* Modals */
+.admin-theme-light .fixed.inset-0 {
+  background-color: rgba(15, 23, 42, 0.4) !important; /* translucent overlay */
+  backdrop-filter: blur(8px) !important;
+}
+
+.admin-theme-light .fixed.inset-0 > div {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+}
+
+.admin-theme-light .fixed.inset-0 > div * {
+  color: #0F172A !important;
+}
+
+.admin-theme-light .fixed.inset-0 > div label {
+  color: #64748B !important;
+}
+
+.admin-theme-light .fixed.inset-0 > div button {
+  color: #0F172A !important;
+}
+
+.admin-theme-light .fixed.inset-0 > div button.bg-blue-600 {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+}
+
+.admin-theme-light .fixed.inset-0 > div button.bg-blue-600 * {
+  color: #FFFFFF !important;
+}
+
+/* Content Tab specific box borders */
+.admin-theme-light .border.rounded-2xl {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+.admin-theme-light .border.rounded-2xl input,
+.admin-theme-light .border.rounded-2xl textarea {
+  background-color: #F8FAFC !important;
+}
+
+.admin-theme-light .border.rounded-2xl input:focus,
+.admin-theme-light .border.rounded-2xl textarea:focus {
+  background-color: #FFFFFF !important;
+}

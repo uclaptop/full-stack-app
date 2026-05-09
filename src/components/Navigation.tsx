@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Laptop, Phone, Menu, X, Instagram, Youtube, Facebook } from 'lucide-react';
+import { Menu, X, Instagram, Youtube, Facebook } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export const Navbar = () => {
+  const { content } = useApp();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -14,11 +16,18 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navTitle = content['navbar.title'] || 'UNIVERSAL COMPUTERS';
+  const navSubtitle = content['navbar.subtitle'] || 'Refurbished Excellence';
+  const phoneRaw = content['contact.phone_raw'] || '8712173339';
+  const instagram = content['footer.instagram_url'] || 'https://www.instagram.com/_universal_computers_';
+  const youtube = content['footer.youtube_url'] || 'https://www.youtube.com/@UniversalComputerspdtr';
+  const facebook = content['footer.facebook_url'] || 'https://www.facebook.com/share/14bJmiFVj6T/';
+
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'About', href: '#about' },
     { name: 'Services', href: '#services' },
-    { name: 'Categories', href: '#categories' },
+    { name: 'Categories', href: '#products' },
     { name: 'Products', href: '#products' },
     { name: 'Gallery', href: '#gallery' },
     { name: 'Contact', href: '#contact' },
@@ -38,8 +47,8 @@ export const Navbar = () => {
         >
           <img src="/logo.jpg" alt="Universal Computers Logo" className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
           <div className="hidden sm:block">
-            <span className="text-xl font-bold tracking-normal text-black block leading-none">UNIVERSAL COMPUTERS</span>
-            <span className="text-[9px] uppercase tracking-[0.3em] text-black/40 font-bold">Refurbished Excellence</span>
+            <span className="text-xl font-bold tracking-normal text-black block leading-none uppercase">{navTitle}</span>
+            <span className="text-[9px] uppercase tracking-[0.3em] text-black/40 font-bold block mt-1">{navSubtitle}</span>
           </div>
         </motion.div>
 
@@ -65,7 +74,7 @@ export const Navbar = () => {
           className="flex items-center gap-4"
         >
           <motion.a 
-            href="tel:8712173339"
+            href={`tel:${phoneRaw}`}
             whileHover={{ backgroundColor: '#EA580C', color: '#fff' }}
             className="hidden lg:block px-6 py-2.5 bg-black text-white text-[10px] font-black tracking-widest rounded-full transition-all"
           >
@@ -102,9 +111,9 @@ export const Navbar = () => {
                 </a>
               ))}
               <div className="flex gap-4 mt-2">
-                <a href="https://www.instagram.com/_universal_computers_" target="_blank" className="p-2 glass rounded-full"><Instagram size={20}/></a>
-                <a href="https://www.youtube.com/@UniversalComputerspdtr" target="_blank" className="p-2 glass rounded-full"><Youtube size={20}/></a>
-                <a href="https://www.facebook.com/share/14bJmiFVj6T/" target="_blank" className="p-2 glass rounded-full"><Facebook size={20}/></a>
+                <a href={instagram} target="_blank" rel="noreferrer" className="p-2 glass rounded-full"><Instagram size={20}/></a>
+                <a href={youtube} target="_blank" rel="noreferrer" className="p-2 glass rounded-full"><Youtube size={20}/></a>
+                <a href={facebook} target="_blank" rel="noreferrer" className="p-2 glass rounded-full"><Facebook size={20}/></a>
               </div>
             </div>
           </motion.div>
@@ -115,9 +124,12 @@ export const Navbar = () => {
 };
 
 export const WhatsAppButton = () => {
+  const { content } = useApp();
+  const whatsapp = content['contact.whatsapp_number'] || '918712173339';
+
   return (
     <motion.a
-      href="https://wa.me/918712173339"
+      href={`https://wa.me/${whatsapp}`}
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}

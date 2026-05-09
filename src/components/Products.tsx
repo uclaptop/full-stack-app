@@ -1,14 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Filter, MessageSquare, Tag } from 'lucide-react';
-import { products, Laptop } from '../data/products';
+import { Search, Filter, Tag } from 'lucide-react';
+import { products as staticProducts, Laptop } from '../data/products';
+import { useApp } from '../context/AppContext';
 
 interface ProductCardProps {
-  product: Laptop;
+  product: any;
   key?: React.Key;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const imageUrl = product.image_url || product.image;
   return (
     <motion.div
       layout
@@ -20,7 +22,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     >
       <div className="relative h-64 overflow-hidden bg-white/5">
         <img 
-          src={product.image} 
+          src={imageUrl} 
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
@@ -64,62 +66,71 @@ const ProductCard = ({ product }: ProductCardProps) => {
 };
 
 export const ProductsSection = () => {
+  const { products: dbProducts } = useApp();
   const [filter, setFilter] = useState<'All' | Laptop['category']>('All');
   const [search, setSearch] = useState('');
+
+  const displayProducts = dbProducts.length > 0 ? dbProducts : staticProducts;
 
   const categories: ('All' | Laptop['category'])[] = [
     'All', 'Business', 'High Performance', 'Graphics', 'Student', 'Developer', 'Accessories'
   ];
 
   const filteredProducts = useMemo(() => {
-    return products.filter(p => {
+    return displayProducts.filter(p => {
       const matchesFilter = filter === 'All' || p.category === filter;
       const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || 
-                           p.brand.toLowerCase().includes(search.toLowerCase()) ||
-                           p.specs.toLowerCase().includes(search.toLowerCase());
+                           (p.brand && p.brand.toLowerCase().includes(search.toLowerCase())) ||
+                           (p.specs && p.specs.toLowerCase().includes(search.toLowerCase()));
       return matchesFilter && matchesSearch;
     });
-  }, [filter, search]);
+  }, [displayProducts, filter, search]);
 
   return (
     <section id="products" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-5">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-orange mb-6">LIVE INVENTORY</h2>
-            <h3 className="text-4xl md:text-7xl font-black tracking-normal leading-snug uppercase">
-              PREMIUM <br /> 
-              <span className="text-brand-blue italic">COLLECTIONS.</span>
-            </h3>
-          </motion.div>
+        <div className="flex flex-col gap-8 mb-16 border-b border-black/5 pb-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-orange mb-3">LIVE INVENTORY</h2>
+              <h3 className="text-4xl md:text-7xl font-black tracking-normal leading-none uppercase">
+                PREMIUM <br /> 
+                <span className="text-brand-blue italic">COLLECTIONS.</span>
+              </h3>
+            </motion.div>
 
-          {/* Search and Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-blue transition-colors" />
+            {/* Search Input on the side, neatly styled */}
+            <div className="relative group w-full md:w-80 shrink-0">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-400 group-focus-within:text-brand-blue transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search models..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="bg-black/5 border border-black/10 rounded-2xl py-3 pl-12 pr-6 outline-none focus:border-brand-blue/50 w-full md:w-64 transition-all"
+                className="bg-black/5 border border-black/10 rounded-2xl py-3.5 pl-12 pr-6 outline-none focus:border-brand-blue/50 w-full transition-all text-sm font-bold text-black placeholder:text-gray-400"
               />
             </div>
+          </div>
+
+          {/* Categories Filter list - full width, horizontally scrollable with custom stylish indicators, centered vertically */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+            <div className="flex items-center gap-2 bg-black/5 px-3 py-2 rounded-xl text-gray-500 font-bold text-xs uppercase tracking-wider shrink-0 border border-black/5">
+              <span>Filter By:</span>
+            </div>
             
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
-              <Filter className="w-4 h-4 text-gray-500 shrink-0" />
+            <div className="flex items-center gap-2">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setFilter(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all border cursor-pointer ${
                     filter === cat 
-                      ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20' 
-                      : 'bg-black/5 text-gray-600 hover:bg-black/10'
+                      ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20 border-brand-blue scale-[1.02]' 
+                      : 'bg-white border-black/10 text-gray-600 hover:bg-black/5 hover:border-black/20'
                   }`}
                 >
                   {cat}
