@@ -198,21 +198,21 @@ export const Hero = () => {
                 {subtext}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-6 items-center">
-                <div className="flex gap-10 bg-black/5 backdrop-blur-sm p-6 rounded-2xl border border-black/10">
+              <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center w-full">
+                <div className="grid grid-cols-3 sm:flex sm:flex-row gap-2 sm:gap-10 bg-black/5 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border border-black/10 w-full sm:w-auto">
                   <div className="flex flex-col">
-                    <span className="text-4xl font-black text-brand-orange">{stat1Value}</span>
-                    <span className="text-[10px] text-black/50 font-black uppercase tracking-widest">{stat1Label}</span>
+                    <span className="text-2xl min-[400px]:text-3xl sm:text-4xl font-black text-brand-orange mb-1 leading-none">{stat1Value}</span>
+                    <span className="text-[9px] sm:text-[10px] text-black/50 font-black uppercase tracking-widest">{stat1Label}</span>
                   </div>
                   <div className="w-px h-12 bg-black/10 hidden sm:block"></div>
                   <div className="flex flex-col">
-                    <span className="text-4xl font-black text-brand-blue">{stat2Value}</span>
-                    <span className="text-[10px] text-black/50 font-black uppercase tracking-widest">{stat2Label}</span>
+                    <span className="text-2xl min-[400px]:text-3xl sm:text-4xl font-black text-brand-blue mb-1 leading-none">{stat2Value}</span>
+                    <span className="text-[9px] sm:text-[10px] text-black/50 font-black uppercase tracking-widest">{stat2Label}</span>
                   </div>
                   <div className="w-px h-12 bg-black/10 hidden sm:block"></div>
                   <div className="flex flex-col">
-                    <span className="text-4xl font-black text-black">{stat3Value}</span>
-                    <span className="text-[10px] text-black/50 font-black uppercase tracking-widest">{stat3Label}</span>
+                    <span className="text-2xl min-[400px]:text-3xl sm:text-4xl font-black text-black mb-1 leading-none">{stat3Value}</span>
+                    <span className="text-[9px] sm:text-[10px] text-black/50 font-black uppercase tracking-widest">{stat3Label}</span>
                   </div>
                 </div>
               </div>
