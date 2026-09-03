@@ -1,243 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { CheckCircle2, Instagram, Youtube, Facebook, Phone, MapPin, Send } from 'lucide-react';
+import { 
+  Phone, MapPin, Send, Instagram, Youtube, Facebook, 
+  Mail, Clock, ShieldCheck, Truck, CheckCircle2, 
+  ExternalLink, Sparkles, MessageSquare 
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
-
-const DEFAULT_WHY_POINTS = [
-  'Scratch-less A+++ Imported Quality',
-  '40-Point Rigorous Quality Testing',
-  '9+ Years of Trusted Service',
-  'Bulk Availability for Businesses',
-  'Affordable Student-Friendly Models',
-  'Dedicated Post-Purchase Warranty',
-  'Original Accessories Included',
-  'Top Google-Rated Store in Proddatur',
-];
-
-const DEFAULT_GALLERY = [
-  { image_url: '/Dell Latitude  3570.png', name: 'Dell Latitude 3570' },
-  { image_url: '/Dell Latitude  5570.png', name: 'Dell Latitude 5570' },
-  { image_url: '/Dell Latitude  7540.png', name: 'Dell Latitude 7540' },
-  { image_url: '/Dell Latitude 5420.png', name: 'Dell Latitude 5420' },
-  { image_url: '/Dell latitude  5490.png', name: 'Dell Latitude 5490' },
-  { image_url: '/Dell latitude  5580.png', name: 'Dell Latitude 5580' },
-  { image_url: '/Dell latitude 3400.png', name: 'Dell Latitude 3400' },
-  { image_url: '/Dell latitude 3480.png', name: 'Dell Latitude 3480' },
-  { image_url: '/Dell latitude 5400.png', name: 'Dell Latitude 5400' },
-  { image_url: '/Dell precision 5530.png', name: 'Dell Precision 5530' },
-  { image_url: '/Hp Elitebook  745 G6.png', name: 'HP EliteBook 745 G6' },
-  { image_url: '/Hp Elitebook 840 G3.png', name: 'HP EliteBook 840 G3' },
-  { image_url: '/Hp Elitebook 840 G5.png', name: 'HP EliteBook 840 G5' },
-  { image_url: '/Hp probook 640 G5.png', name: 'HP ProBook 640 G5' },
-  { image_url: '/T490.png', name: 'Lenovo ThinkPad T490' },
-  { image_url: '/dell latitude 5550.png', name: 'Dell Latitude 5550' },
-];
-
-export const WhyChooseUs = () => {
-  const { whyPoints } = useApp();
-  const points = whyPoints.length > 0
-    ? whyPoints.map(p => p.point)
-    : DEFAULT_WHY_POINTS;
-
-  return (
-    <section className="py-24 bg-surface-dark overflow-hidden">
-      <div className="max-w-7xl mx-auto px-5">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-blue mb-6">WHY CHOOSE UC</h2>
-            <h3 className="text-4xl md:text-7xl font-black tracking-normal leading-snug mb-12 uppercase">
-              RELIABILITY <br /> 
-              <span className="text-brand-orange italic">THAT MATTERS.</span>
-            </h3>
-            
-            <div className="grid sm:grid-cols-2 gap-4">
-              {points.map((pt, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="flex items-center gap-4 p-5 bg-black/5 border border-black/10 rounded-2xl"
-                >
-                  <CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0" />
-                  <span className="text-[11px] font-black uppercase tracking-wider text-black/70">{pt}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-brand-blue/20 blur-[100px] rounded-full" />
-            <div className="glass p-8 rounded-[40px] relative z-10">
-              <img 
-                src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200" 
-                alt="Quality Check" 
-                className="rounded-3xl shadow-2xl mb-8"
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 glass rounded-2xl">
-                  <div className="text-2xl font-black text-brand-blue">100%</div>
-                  <div className="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Genuine Parts</div>
-                </div>
-                <div className="text-center p-4 glass rounded-2xl">
-                  <div className="text-2xl font-black text-brand-orange">48Hrs</div>
-                  <div className="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Testing Period</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export const Gallery = () => {
-  const { stockItems } = useApp();
-  const galleryItems = stockItems.length > 0
-    ? stockItems.map(p => ({ image: p.image_url, name: p.name }))
-    : DEFAULT_GALLERY.map(p => ({ image: p.image_url, name: p.name }));
-
-  return (
-    <section id="gallery" className="py-32">
-      <div className="max-w-7xl mx-auto px-5">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-orange mb-6 text-center">CURRENT STOCK</h2>
-        <h3 className="text-4xl md:text-7xl font-black tracking-normal leading-snug text-center mb-20 uppercase">
-          REAL DEVICES. <br/><span className="text-black/20 italic">REAL DEALS.</span>
-        </h3>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {galleryItems.map((item, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 0.98 }}
-              className="relative aspect-video rounded-2xl overflow-hidden glass group cursor-zoom-in bg-white/50 flex items-center justify-center"
-            >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute bottom-0 inset-x-0 bg-black/70 backdrop-blur-md p-3 border-t border-white/10">
-                <span className="text-white font-bold uppercase tracking-wider text-[10px] md:text-xs text-center block">{item.name}</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 export const Contact = () => {
   const { content } = useApp();
   const phone = content['contact.phone'] || '+91 87121 73339';
-  const whatsapp = content['contact.whatsapp_number'] || '918712173339';
-  const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
-  const addressCity = content['contact.address_city'] || 'Proddatur, AP, India.';
-  const instagram = content['footer.instagram_url'] || 'https://www.instagram.com/_universal_computers_';
-  const youtube = content['footer.youtube_url'] || 'https://www.youtube.com/@UniversalComputerspdtr';
-  const facebook = content['footer.facebook_url'] || 'https://www.facebook.com/share/14bJmiFVj6T/';
-
-  const handleWhatsAppSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get('name') as string;
-    const phoneNum = formData.get('phone') as string;
-    const email = formData.get('email') as string;
-    const message = formData.get('message') as string;
-    const text = `*New Inquiry*\n\n*Name:* ${name}\n*Phone:* ${phoneNum}\n*Email:* ${email || 'Not provided'}\n*Requirement:* ${message}`;
-    window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`, '_blank');
-  };
-
-  return (
-    <section id="contact" className="py-32 bg-mesh relative overflow-hidden border-t border-black/5">
-      <div className="max-w-7xl mx-auto px-5 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-blue mb-6">GET IN TOUCH</h2>
-            <h3 className="text-4xl md:text-7xl font-black tracking-normal leading-snug mb-10 uppercase">
-              VISIT OUR <br />
-              <span className="text-brand-orange italic">EXPERIENCE STORE.</span>
-            </h3>
-            <div className="space-y-10 mb-12">
-              <div className="flex items-start gap-6">
-                <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center shrink-0 border border-blue-500/20">
-                  <MapPin className="text-brand-blue w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-black text-xs uppercase tracking-widest text-black/40 mb-2">Location</h4>
-                  <p className="text-lg font-bold leading-tight">{addressCity}</p>
-                  <p className="text-sm text-black/40 mt-1">{addressLine1}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-6">
-                <div className="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center shrink-0 border border-orange-500/20">
-                  <Phone className="text-brand-orange w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-black text-xs uppercase tracking-widest text-black/40 mb-2">Phone</h4>
-                  <p className="text-2xl font-mono font-black">{phone}</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <a href={instagram} target="_blank" rel="noreferrer" className="w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-brand-blue transition-colors group">
-                <Instagram className="w-5 h-5 group-hover:text-white" />
-              </a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-brand-blue transition-colors group">
-                <Youtube className="w-5 h-5 group-hover:text-white" />
-              </a>
-              <a href={facebook} target="_blank" rel="noreferrer" className="w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-brand-blue transition-colors group">
-                <Facebook className="w-5 h-5 group-hover:text-white" />
-              </a>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="glass rounded-[40px] p-8 md:p-12 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Send size={120} className="rotate-12" />
-            </div>
-            <h4 className="text-2xl font-black mb-8 tracking-tight">Drop us a message</h4>
-            <form className="space-y-4" onSubmit={handleWhatsAppSubmit}>
-              <div className="grid md:grid-cols-2 gap-4">
-                <input type="text" name="name" required placeholder="Your Name"
-                  className="bg-black/5 border border-black/10 rounded-2xl p-4 outline-none focus:border-brand-blue/50 w-full text-black placeholder:text-black/50" />
-                <input type="text" name="phone" required placeholder="Phone Number"
-                  className="bg-black/5 border border-black/10 rounded-2xl p-4 outline-none focus:border-brand-blue/50 w-full text-black placeholder:text-black/50" />
-              </div>
-              <input type="email" name="email" placeholder="Email Address (Optional)"
-                className="bg-black/5 border border-black/10 rounded-2xl p-4 outline-none focus:border-brand-blue/50 w-full text-black placeholder:text-black/50" />
-              <textarea rows={4} name="message" required placeholder="What laptop are you looking for?"
-                className="bg-black/5 border border-black/10 rounded-2xl p-4 outline-none focus:border-brand-blue/50 w-full text-black placeholder:text-black/50" />
-              <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className="w-full bg-brand-blue text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-brand-blue/20 cursor-pointer">
-                Send via WhatsApp
-                <Send className="w-5 h-5" />
-              </motion.button>
-            </form>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export const MapSection = () => {
-  const { content } = useApp();
-  const phone = content['contact.phone'] || '+91 87121 73339';
-  const whatsapp = content['contact.whatsapp_number'] || '918712173339';
+  const phoneRaw = content['contact.phone_raw'] || '8712173339';
   const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
   const addressCity = content['contact.address_city'] || 'Proddatur, AP 516360';
   const email = content['contact.email'] || 'info@universalcomputers.com';
@@ -246,48 +19,300 @@ export const MapSection = () => {
   const youtube = content['footer.youtube_url'] || 'https://www.youtube.com/@UniversalComputerspdtr';
   const facebook = content['footer.facebook_url'] || 'https://www.facebook.com/share/14bJmiFVj6T/';
 
+  const [selectedInterest, setSelectedInterest] = useState('Refurbished Laptop');
+
+  const handleWhatsAppSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const name = (form.elements.namedItem('name') as HTMLInputElement)?.value || '';
+    const userPhone = (form.elements.namedItem('phone') as HTMLInputElement)?.value || '';
+    const userEmail = (form.elements.namedItem('email') as HTMLInputElement)?.value || '';
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement)?.value || '';
+
+    const text = `*New Inquiry from Universal Computers Website*\n\n` +
+      `*Name:* ${name}\n` +
+      `*Phone:* ${userPhone}\n` +
+      (userEmail ? `*Email:* ${userEmail}\n` : '') +
+      `*Interest:* ${selectedInterest}\n` +
+      `*Requirement:* ${message}\n\n` +
+      `_Sent from universalcomputers.in_`;
+
+    window.open(`https://wa.me/${phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const interests = [
+    '💻 Refurbished Laptop',
+    '🖥️ Tiny PC / Desktop',
+    '📺 Monitor / Display',
+    '⚡ Bulk Order / Business',
+  ];
+
   return (
-    <section id="map" className="bg-[#1f1f1f] font-sans">
-      <div className="max-w-7xl mx-auto px-5 py-12 md:py-16">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+    <section id="contact" className="w-full bg-[#f8f9fa] py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 font-['Inter',sans-serif]">
+      <div className="max-w-7xl mx-auto">
+        
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
           
-          {/* Left: Contact Details */}
-          <div className="text-white">
-            <h3 className="text-2xl md:text-[28px] font-bold mb-6 text-white tracking-normal normal-case">
-              Contact Us
-            </h3>
-            
-            <div className="space-y-3 text-[15px] text-gray-200">
-              <p>
-                Phone: {phone}
-              </p>
+          {/* ── LEFT COLUMN: STORE INFO & CREDENTIALS ── */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-5 flex flex-col space-y-8"
+          >
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B1E3D]/10 text-[#0B1E3D] text-xs font-bold uppercase tracking-wider mb-4">
+                <Sparkles className="w-3.5 h-3.5 text-[#E8A93B]" /> Get in Touch
+              </span>
               
-              <p>
-                Email: {email}
-              </p>
-              
-              <p className="leading-relaxed">
-                Address: {addressLine1},<br />
-                {addressCity}
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0B1E3D] tracking-tight leading-tight uppercase mb-4 font-['Inter',sans-serif]">
+                VISIT OUR <br />
+                <span className="text-brand-blue">EXPERIENCE STORE.</span>
+              </h2>
+
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                Experience testing devices in person at our Proddatur showroom. Our hardware specialists are ready to guide you to the perfect specs.
               </p>
             </div>
 
-            {/* Simple Social Icons */}
-            <div className="flex gap-5 mt-8">
-              <a href={facebook} target="_blank" rel="noreferrer" className="text-[#3b5998] hover:text-white transition-colors">
-                <Facebook className="w-5 h-5 fill-current" />
-              </a>
-              <a href={instagram} target="_blank" rel="noreferrer" className="text-[#00acee] hover:text-white transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="text-brand-blue hover:text-white transition-colors">
-                <Youtube className="w-5 h-5" />
+            {/* Store Contact Badges */}
+            <div className="space-y-4">
+              
+              {/* Location */}
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-blue-50 text-brand-blue flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-[#133da6]" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Store Location</span>
+                  <p className="text-sm font-bold text-slate-900 mt-0.5">{addressCity}</p>
+                  <p className="text-xs text-slate-500">{addressLine1}</p>
+                </div>
+              </div>
+
+              {/* Direct Phone */}
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <Phone className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Call / WhatsApp Support</span>
+                  <a href={`tel:${phoneRaw}`} className="text-base sm:text-lg font-bold text-slate-900 hover:text-brand-blue transition-colors mt-0.5 block">
+                    {phone}
+                  </a>
+                  <p className="text-xs text-emerald-600 font-semibold mt-0.5">● Available Mon–Sat (9 AM – 8:30 PM)</p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-amber-50 text-[#E8A93B] flex items-center justify-center shrink-0">
+                  <Mail className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Official Email</span>
+                  <a href={`mailto:${email}`} className="text-sm font-bold text-slate-900 hover:text-brand-blue transition-colors mt-0.5 block">
+                    {email}
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Social Media Links */}
+            <div className="pt-2">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-3">Connect On Social Media</span>
+              <div className="flex items-center gap-3">
+                <a 
+                  href={instagram} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="w-11 h-11 rounded-xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center text-slate-700 hover:text-white hover:bg-gradient-to-tr hover:from-amber-500 hover:via-pink-500 hover:to-purple-600 transition-all cursor-pointer"
+                  title="Follow on Instagram"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a 
+                  href={youtube} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="w-11 h-11 rounded-xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center text-slate-700 hover:text-white hover:bg-red-600 transition-all cursor-pointer"
+                  title="Subscribe on YouTube"
+                >
+                  <Youtube className="w-5 h-5" />
+                </a>
+                <a 
+                  href={facebook} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="w-11 h-11 rounded-xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center text-slate-700 hover:text-white hover:bg-[#1877F2] transition-all cursor-pointer"
+                  title="Follow on Facebook"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+
+          </motion.div>
+
+          {/* ── RIGHT COLUMN: INTERACTIVE INQUIRY FORM ── */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm"
+          >
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold text-slate-900 tracking-tight mb-1 font-['Inter',sans-serif]">
+                Drop Us A Message
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 font-normal">
+                Tell us your hardware requirements and we'll instantly connect with current available stock & best price quotes.
+              </p>
+            </div>
+
+            {/* Requirement Interest Pills */}
+            <div className="mb-6">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                I Am Looking For:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {interests.map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => setSelectedInterest(item)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                      selectedInterest === item
+                        ? 'bg-[#0B1E3D] text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <form onSubmit={handleWhatsAppSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Your Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    placeholder="e.g. Ramesh Kumar"
+                    className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand-blue focus:bg-white text-sm transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">WhatsApp / Phone Number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    placeholder="e.g. 9876543210"
+                    className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand-blue focus:bg-white text-sm transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">Email Address (Optional)</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="e.g. ramesh@gmail.com"
+                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand-blue focus:bg-white text-sm transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">What laptop or PC specs are you looking for? *</label>
+                <textarea
+                  name="message"
+                  required
+                  rows={4}
+                  placeholder="e.g. Need an i5 8th or 11th Gen Dell/HP laptop with 16GB RAM for programming and college work..."
+                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl p-4 text-slate-900 placeholder:text-slate-400 outline-none focus:border-brand-blue focus:bg-white text-sm transition-all resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 bg-[#0B1E3D] hover:bg-[#133da6] text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-[#0B1E3D]/20 flex items-center justify-center gap-2 transition-all active:scale-98 cursor-pointer mt-2"
+              >
+                Send via WhatsApp <Send className="w-4 h-4" />
+              </button>
+            </form>
+
+          </motion.div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export const MapSection = () => {
+  const { content } = useApp();
+  const phone = content['contact.phone'] || '+91 87121 73339';
+  const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
+  const addressCity = content['contact.address_city'] || 'Proddatur, AP 516360';
+  const email = content['contact.email'] || 'info@universalcomputers.com';
+
+  return (
+    <section id="map" className="w-full bg-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 font-['Inter',sans-serif]">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-[#0B1E3D] rounded-3xl p-6 sm:p-10 text-white shadow-xl overflow-hidden grid lg:grid-cols-12 gap-8 items-center relative">
+          
+          {/* Decorative Glow */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Left Store Info */}
+          <div className="lg:col-span-5 space-y-5 relative z-10">
+            <span className="text-[#E8A93B] font-mono text-xs uppercase tracking-widest block font-bold">
+              Find Our Store Location
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+              Universal Computers Experience Hub
+            </h3>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Located right at Church Complex Upstairs in the center of Proddatur. Walk in anytime to test any laptop before purchasing.
+            </p>
+
+            <div className="space-y-3 pt-2 text-sm text-slate-200">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4 text-[#E8A93B] shrink-0" />
+                <span>{addressLine1}, {addressCity}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{phone}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Clock className="w-4 h-4 text-blue-400 shrink-0" />
+                <span>Mon–Sat: 9:00 AM – 8:30 PM (Sun: 10 AM – 6 PM)</span>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <a
+                href="https://maps.app.goo.gl/aeSvq9gcxcFew8iR8"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E8A93B] hover:bg-[#d8972a] text-[#0B1E3D] font-bold text-xs uppercase tracking-wider shadow-md transition-all active:scale-95 cursor-pointer"
+              >
+                Open in Google Maps <ExternalLink className="w-4 h-4" />
               </a>
             </div>
           </div>
 
-          {/* Right: Map iframe */}
-          <div className="w-full h-[300px] md:h-[400px] relative">
+          {/* Right Map Preview */}
+          <div className="lg:col-span-7 h-[280px] sm:h-[340px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
             <iframe
               title="Universal Computers Location"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3815.6!2d78.5480!3d14.7340!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb478a826957a3f%3A0x6d07c32748b8a5d2!2sUniversal%20computers!5e0!3m2!1sen!2sin!4v1715000000000!5m2!1sen!2sin"
@@ -298,16 +323,6 @@ export const MapSection = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
-            {/* Overlay "Open in Maps" button */}
-            <a
-              href="https://maps.app.goo.gl/aeSvq9gcxcFew8iR8"
-              target="_blank"
-              rel="noreferrer"
-              className="absolute top-3 right-3 bg-white text-blue-600 text-xs font-semibold px-3 py-1.5 rounded shadow flex items-center gap-1 hover:bg-blue-50 transition-colors z-10"
-            >
-              <MapPin className="w-3 h-3" />
-              Open in Maps
-            </a>
           </div>
 
         </div>
@@ -318,48 +333,146 @@ export const MapSection = () => {
 
 export const Footer = () => {
   const { content } = useApp();
-  const weekday = content['footer.hours_weekday'] || 'MON-SAT 9AM-8:30PM';
-  const weekend = content['footer.hours_weekend'] || 'SUN 10AM-6:00PM';
-  const tagline = content['footer.tagline'] || "Bringing premium technology within everyone's reach. Trusted by over 1k+ satisfied customers for more than 9 years in Proddatur.";
+  const phone = content['contact.phone'] || '+91 87121 73339';
+  const phoneRaw = content['contact.phone_raw'] || '8712173339';
+  const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
+  const addressCity = content['contact.address_city'] || 'Proddatur, AP 516360';
+  const email = content['contact.email'] || 'info@universalcomputers.com';
+  const weekday = content['footer.hours_weekday'] || 'MON-SAT 9:00 AM - 8:30 PM';
+  const weekend = content['footer.hours_weekend'] || 'SUN 10:00 AM - 6:00 PM';
+  
   const instagram = content['footer.instagram_url'] || 'https://www.instagram.com/_universal_computers_';
   const youtube = content['footer.youtube_url'] || 'https://www.youtube.com/@UniversalComputerspdtr';
   const facebook = content['footer.facebook_url'] || 'https://www.facebook.com/share/14bJmiFVj6T/';
 
   return (
-    <footer className="py-24 border-t border-black/5 bg-bg-dark">
-      <div className="max-w-7xl mx-auto px-5">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-16 mb-16">
-          <div className="col-span-2">
-            <div className="flex items-center gap-4 mb-8">
-              <img src="/logo.jpg" alt="Universal Computers Logo" className="w-16 h-16 object-contain" />
-              <span className="text-3xl font-black tracking-normal uppercase text-black">Universal <br/>Computers.</span>
+    <footer className="w-full bg-[#0B1E3D] text-white pt-16 pb-8 border-t border-[#133da6]/40 font-['Inter',sans-serif]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* ── Top Footer Grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-14 border-b border-white/10">
+          
+          {/* Column 1: Brand & Bio (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="flex items-center">
+              <div className="bg-white px-3.5 py-1.5 rounded-2xl inline-flex items-center shadow-md">
+                <img 
+                  src="/logo.png" 
+                  alt="Universal Computers" 
+                  className="h-11 sm:h-12 w-auto max-w-[280px] object-contain" 
+                />
+              </div>
             </div>
-            <p className="text-black/60 max-w-sm mb-10 leading-relaxed font-medium">{tagline}</p>
+
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-md font-normal">
+              South India's most trusted certified refurbished IT hardware store. Delivering premium enterprise-grade laptops, desktops, and workstations tested with 40-point quality assurance since 2015.
+            </p>
+
+            {/* Trust Highlights */}
+            <div className="grid grid-cols-3 gap-2 pt-1 max-w-md">
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
+                <span className="text-[10px] font-bold text-[#E8A93B] block uppercase tracking-wider">1-Year</span>
+                <span className="text-[10px] text-slate-300 font-medium">Warranty</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
+                <span className="text-[10px] font-bold text-[#E8A93B] block uppercase tracking-wider">40-Point</span>
+                <span className="text-[10px] text-slate-300 font-medium">QC Tested</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
+                <span className="text-[10px] font-bold text-[#E8A93B] block uppercase tracking-wider">9+ Years</span>
+                <span className="text-[10px] text-slate-300 font-medium">In Proddatur</span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h4 className="font-black mb-8 uppercase text-[10px] tracking-[0.4em] text-brand-blue">Store Info</h4>
-            <div className="space-y-4 font-black uppercase text-[10px] tracking-widest">
-              <p className="text-black/50">{weekday}</p>
-              <p className="text-brand-orange">{weekend}</p>
-              <p className="text-black">PRODDATUR, AP</p>
+          {/* Column 2: Quick Links (2 cols) */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-[#E8A93B]">
+              Collections
+            </h4>
+            <ul className="space-y-2.5 text-xs text-slate-300 font-medium">
+              <li><a href="#collections" className="hover:text-white hover:underline transition-colors">Laptops</a></li>
+              <li><a href="#collections" className="hover:text-white hover:underline transition-colors">Tiny PC</a></li>
+              <li><a href="#collections" className="hover:text-white hover:underline transition-colors">Desktops</a></li>
+              <li><a href="#collections" className="hover:text-white hover:underline transition-colors">Monitors</a></li>
+              <li><a href="#collections" className="hover:text-white hover:underline transition-colors">Accessories</a></li>
+            </ul>
+          </div>
+
+          {/* Column 3: Navigation (2 cols) */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-[#E8A93B]">
+              Navigation
+            </h4>
+            <ul className="space-y-2.5 text-xs text-slate-300 font-medium">
+              <li><a href="#" className="hover:text-white hover:underline transition-colors">Home</a></li>
+              <li><a href="#about" className="hover:text-white hover:underline transition-colors">About Us</a></li>
+              <li><a href="#products" className="hover:text-white hover:underline transition-colors">Trending Deals</a></li>
+              <li><a href="#contact" className="hover:text-white hover:underline transition-colors">Store Visit</a></li>
+              <li><a href="/uclaptop" className="hover:text-[#E8A93B] transition-colors">Admin Portal</a></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Hours (3 cols) */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-[#E8A93B]">
+              Store Timings
+            </h4>
+            <div className="space-y-2 text-xs text-slate-300">
+              <p className="font-semibold text-white">{weekday}</p>
+              <p className="text-[#E8A93B] font-semibold">{weekend}</p>
+              <p className="text-slate-400 pt-2 leading-relaxed">
+                {addressLine1},<br />
+                {addressCity}
+              </p>
+            </div>
+
+            {/* Social Icons */}
+            <div className="flex items-center gap-3 pt-3">
+              <a 
+                href={instagram} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="w-9 h-9 rounded-lg bg-white/10 hover:bg-pink-600 flex items-center justify-center text-white transition-all"
+                title="Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a 
+                href={youtube} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="w-9 h-9 rounded-lg bg-white/10 hover:bg-red-600 flex items-center justify-center text-white transition-all"
+                title="YouTube"
+              >
+                <Youtube className="w-4 h-4" />
+              </a>
+              <a 
+                href={facebook} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="w-9 h-9 rounded-lg bg-white/10 hover:bg-blue-600 flex items-center justify-center text-white transition-all"
+                title="Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
+        </div>
+
+        {/* ── Bottom Bar ── */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-medium">
           <div>
-            <h4 className="font-black mb-8 uppercase text-[10px] tracking-[0.4em] text-brand-orange">Socials</h4>
-            <div className="flex flex-col gap-3">
-              <a href={instagram} target="_blank" rel="noreferrer" className="text-xs font-black uppercase tracking-widest text-black/40 hover:text-black transition-all">INSTAGRAM</a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="text-xs font-black uppercase tracking-widest text-black/40 hover:text-black transition-all">YOUTUBE</a>
-              <a href={facebook} target="_blank" rel="noreferrer" className="text-xs font-black uppercase tracking-widest text-black/40 hover:text-black transition-all">FACEBOOK</a>
-            </div>
+            © {new Date().getFullYear()} Universal Computers. All Rights Reserved.
+          </div>
+          <div className="flex items-center gap-4 text-slate-400">
+            <span>Proddatur, Andhra Pradesh</span>
+            <span>•</span>
+            <span className="text-[#E8A93B] font-semibold">Established 2015</span>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black text-black/30 uppercase tracking-[0.5em]">
-          <div>© 2024 UNIVERSAL COMPUTERS</div>
-          <div>ESTD 2015</div>
-        </div>
       </div>
     </footer>
   );

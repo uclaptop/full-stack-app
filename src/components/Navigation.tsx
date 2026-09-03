@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Instagram, Youtube, Facebook } from 'lucide-react';
+import { Menu, X, Instagram, Youtube, Facebook, ShoppingBag, Search } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { RunningBanner } from './RunningBanner';
 
 export const Navbar = () => {
-  const { content } = useApp();
+  const { content, cartCount, setIsCartOpen } = useApp();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -25,45 +26,46 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', href: '#' },
+    { name: 'Collections', href: '#collections' },
+    { name: 'Deals', href: '#products' },
     { name: 'About', href: '#about' },
-    { name: 'Services', href: '#services' },
-    { name: 'Categories', href: '#products' },
-    { name: 'Products', href: '#products' },
-    { name: 'Gallery', href: '#gallery' },
     { name: 'Contact', href: '#contact' },
   ];
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass py-3' : 'bg-transparent py-5'
-      }`}
-    >
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <nav 
+        className={`transition-all duration-300 ${
+          isScrolled ? 'bg-white/95 backdrop-blur-md py-2.5 shadow-sm' : 'bg-white/95 backdrop-blur-md py-3.5 border-b border-black/5'
+        }`}
+      >
       <div className="max-w-7xl mx-auto px-5 flex items-center justify-between">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3 group cursor-pointer"
+          className="flex items-center group cursor-pointer"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <img src="/logo.jpg" alt="Universal Computers Logo" className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
-          <div className="hidden sm:block">
-            <span className="text-xl font-bold tracking-normal text-black block leading-none uppercase">{navTitle}</span>
-            <span className="text-[9px] uppercase tracking-[0.3em] text-black/40 font-bold block mt-1">{navSubtitle}</span>
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="Universal Computers" 
+            className="h-12 sm:h-14 md:h-16 lg:h-18 w-auto max-w-[240px] sm:max-w-[300px] md:max-w-[360px] lg:max-w-[420px] object-contain drop-shadow-sm group-hover:scale-105 transition-transform" 
+          />
         </motion.div>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden md:flex items-center gap-7 lg:gap-9">
           {navLinks.map((link, i) => (
             <motion.a
               key={link.name}
               href={link.href}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className="text-[11px] font-black uppercase tracking-[0.2em] text-black/50 hover:text-black transition-all relative group"
+              transition={{ delay: i * 0.04 }}
+              className="text-sm font-semibold text-slate-700 hover:text-brand-blue transition-colors relative group py-1"
             >
               {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full rounded-full" />
             </motion.a>
           ))}
         </div>
@@ -71,18 +73,43 @@ export const Navbar = () => {
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-4"
+          className="flex items-center gap-3 md:gap-4"
         >
+          {/* Cart Button */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="relative flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-brand-blue/10 border border-slate-200/80 hover:border-brand-blue/30 transition-all group"
+            title="View Cart & Enquire"
+          >
+            <div className="relative flex items-center justify-center">
+              <ShoppingBag className="w-5 h-5 text-slate-800 group-hover:text-brand-blue transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2.5 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+            <div className="hidden sm:flex flex-col text-left leading-none">
+              <span className="text-xs font-bold text-slate-900 group-hover:text-brand-blue transition-colors">
+                Cart
+              </span>
+              <span className="text-[10px] font-medium text-slate-500 mt-0.5">
+                {cartCount} {cartCount === 1 ? 'item' : 'items'}
+              </span>
+            </div>
+          </button>
+
           <motion.a 
             href={`tel:${phoneRaw}`}
-            whileHover={{ backgroundColor: '#EA580C', color: '#fff' }}
-            className="hidden lg:block px-6 py-2.5 bg-black text-white text-[10px] font-black tracking-widest rounded-full transition-all"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            className="hidden lg:flex items-center justify-center px-6 py-2.5 bg-slate-900 hover:bg-brand-blue text-white text-xs font-bold rounded-full transition-all shadow-sm hover:shadow-md hover:shadow-brand-blue/20 tracking-wider"
           >
             ENQUIRE NOW
           </motion.a>
           
           <button 
-            className="md:hidden text-black"
+            className="md:hidden text-slate-900 p-1"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X /> : <Menu />}
@@ -99,13 +126,28 @@ export const Navbar = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass overflow-hidden"
           >
-            <div className="flex flex-col p-5 gap-4">
+            <div className="flex flex-col p-5 gap-3 bg-white/95 backdrop-blur-xl border-t border-black/5">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsCartOpen(true);
+                }}
+                className="flex items-center justify-between p-3 rounded-2xl bg-brand-blue/10 text-brand-blue font-bold text-sm"
+              >
+                <div className="flex items-center gap-2">
+                  <ShoppingBag className="w-5 h-5" />
+                  <span>View Cart / Enquiry</span>
+                </div>
+                <span className="bg-brand-orange text-white text-xs px-2 py-0.5 rounded-full font-black">
+                  {cartCount}
+                </span>
+              </button>
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-lg font-medium text-gray-800 hover:text-brand-blue border-b border-black/5 pb-2"
+                  className="text-base font-bold text-slate-800 hover:text-brand-blue border-b border-black/5 pb-2"
                 >
                   {link.name}
                 </a>
@@ -119,7 +161,10 @@ export const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+      </nav>
+      {/* Continuous Green Running Ticker Bar */}
+      <RunningBanner />
+    </header>
   );
 };
 

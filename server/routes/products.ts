@@ -32,18 +32,32 @@ router.get('/all', verifyToken, async (_req: AuthRequest, res: Response) => {
 // Admin: add product
 router.post('/', verifyToken, async (req: AuthRequest, res: Response) => {
   try {
-    const { name, brand, specs, category, tag, price, image_url, sort_order } = req.body;
+    const { 
+      name, brand, specs, category, tag, price, mrp, 
+      image_url, secondary_image_url, gallery_images, 
+      is_trending, description, sku, sort_order 
+    } = req.body;
     const result = await pool.query(
-      `INSERT INTO products (name, brand, specs, category, tag, price, image_url, sort_order, is_active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true) RETURNING *`,
+      `INSERT INTO products (
+        name, brand, specs, category, tag, price, mrp, 
+        image_url, secondary_image_url, gallery_images, 
+        is_trending, description, sku, sort_order, is_active
+      )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, true) RETURNING *`,
       [
         name,
-        brand || '',
+        brand || 'Dell',
         specs || '',
-        category || '',
+        category || 'Business',
         tag || '',
-        price || '',
+        price || 0,
+        mrp || 0,
         image_url,
+        secondary_image_url || '',
+        gallery_images || '',
+        Boolean(is_trending),
+        description || '',
+        sku || '',
         sort_order || 0
       ]
     );
@@ -58,19 +72,31 @@ router.post('/', verifyToken, async (req: AuthRequest, res: Response) => {
 router.put('/:id', verifyToken, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, brand, specs, category, tag, price, image_url, sort_order, is_active } = req.body;
+    const { 
+      name, brand, specs, category, tag, price, mrp, 
+      image_url, secondary_image_url, gallery_images, 
+      is_trending, description, sku, sort_order, is_active 
+    } = req.body;
     const result = await pool.query(
       `UPDATE products 
-       SET name=$1, brand=$2, specs=$3, category=$4, tag=$5, price=$6, image_url=$7, sort_order=$8, is_active=$9
-       WHERE id=$10 RETURNING *`,
+       SET name=$1, brand=$2, specs=$3, category=$4, tag=$5, price=$6, mrp=$7, 
+           image_url=$8, secondary_image_url=$9, gallery_images=$10, is_trending=$11, 
+           description=$12, sku=$13, sort_order=$14, is_active=$15
+       WHERE id=$16 RETURNING *`,
       [
         name,
-        brand || '',
+        brand || 'Dell',
         specs || '',
-        category || '',
+        category || 'Business',
         tag || '',
-        price || '',
+        price || 0,
+        mrp || 0,
         image_url,
+        secondary_image_url || '',
+        gallery_images || '',
+        Boolean(is_trending),
+        description || '',
+        sku || '',
         sort_order || 0,
         is_active ?? true,
         id
@@ -100,6 +126,20 @@ router.put('/:id/toggle', verifyToken, async (req: AuthRequest, res: Response) =
     const { id } = req.params;
     const result = await pool.query(
       'UPDATE products SET is_active = NOT is_active WHERE id=$1 RETURNING *',
+      [id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+// Admin: toggle trending status
+router.put('/:id/toggle-trending', verifyToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'UPDATE products SET is_trending = NOT is_trending WHERE id=$1 RETURNING *',
       [id]
     );
     res.json(result.rows[0]);

@@ -50,18 +50,18 @@ export const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-orange mb-6">PRODDATUR'S TECH HUB</h2>
-              <h3 className="text-4xl md:text-7xl font-black tracking-tighter leading-none mb-10 uppercase">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-brand-orange mb-3">PRODDATUR'S TECH HUB</h2>
+              <h3 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6 uppercase text-slate-900">
                 TRUSTED <br /> 
-                <span className="text-black/20 italic">SINCE 2015.</span>
+                <span className="text-slate-400 italic">SINCE 2015.</span>
               </h3>
-              <p className="text-black/60 text-xl mb-12 leading-relaxed font-medium">
+              <p className="text-base sm:text-lg text-slate-600 mb-8 leading-relaxed font-normal">
                 Universal Computers (UC) has been a leading technological hub for over 9 years. 
                 Our focus has always been on bridging the gap between premium tech and 
                 affordable pricing.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 p-8 sm:p-12 bg-black/5 border border-black/10 rounded-[40px]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 sm:p-8 bg-white border border-slate-200/80 rounded-3xl shadow-sm">
                 <CountUp to="1k+" label="Customers" />
                 <CountUp to="500+" label="Models" />
                 <CountUp to="#1" label="Rated" />
@@ -88,14 +88,14 @@ const ServiceCard = ({ icon: Icon, title, description, delay }: ServiceCardProps
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay }}
-    whileHover={{ y: -10 }}
-    className="glass p-8 rounded-3xl group transition-all"
+    whileHover={{ y: -6 }}
+    className="bg-white p-8 rounded-3xl border border-slate-200/80 hover:border-brand-blue/30 shadow-sm hover:shadow-md transition-all group"
   >
-    <div className="w-14 h-14 bg-black/5 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-brand-blue group-hover:scale-110 transition-all duration-500">
-      <Icon className="w-7 h-7 group-hover:text-white text-brand-blue transition-colors" />
+    <div className="w-13 h-13 bg-brand-blue/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-brand-blue transition-all duration-300">
+      <Icon className="w-6 h-6 group-hover:text-white text-brand-blue transition-colors" />
     </div>
-    <h4 className="text-xl font-bold mb-4">{title}</h4>
-    <p className="text-gray-600 text-sm leading-relaxed">
+    <h4 className="text-lg font-bold mb-3 text-slate-900 group-hover:text-brand-blue transition-colors">{title}</h4>
+    <p className="text-slate-600 text-sm leading-relaxed font-normal">
       {description}
     </p>
   </motion.div>
@@ -106,7 +106,7 @@ export const Services = () => {
     {
       icon: Laptop,
       title: "PREMIUM BUILDS",
-      description: "Imported laptops in A+++ scratch-less condition. Guaranteed performance at half the price."
+      description: "Imported laptops in A+++ scratch-less condition. Guaranteed performance at unbeatable prices."
     },
     {
       icon: Cpu,
@@ -125,39 +125,39 @@ export const Services = () => {
     },
     {
       icon: Settings,
-      title: "SUPPORT SET",
+      title: "ACCESSORIES & SUPPORT",
       description: "From original chargers to specialized laptop bags and peripherals, we have it all in store."
     },
   ];
 
   return (
-    <section id="services" className="py-32 bg-mesh border-y border-black/5">
+    <section id="services" className="py-24 bg-mesh border-y border-black/5">
       <div className="max-w-7xl mx-auto px-5">
-        <div className="max-w-3xl mb-20">
+        <div className="max-w-3xl mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-blue mb-6">OUR SERVICES</h2>
-            <h3 className="text-4xl md:text-7xl font-black tracking-tighter leading-none uppercase">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-blue mb-3">OUR SERVICES</h2>
+            <h3 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight uppercase text-slate-900">
               BEYOND SELLING. <br /> 
-              <span className="text-brand-orange italic">EXCELLENCE ONLY.</span>
+              <span className="text-brand-orange">EXCELLENCE ONLY.</span>
             </h3>
           </motion.div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((s, i) => (
-            <ServiceCard key={i} {...s} delay={i * 0.1} />
+            <ServiceCard key={i} {...s} delay={i * 0.08} />
           ))}
-          <div className="bg-brand-blue rounded-3xl p-10 flex flex-col justify-between group">
-            <h4 className="text-3xl font-black leading-none italic uppercase">50+ Latest <br />Models In Store</h4>
-            <div className="grid grid-cols-2 gap-3 mt-10">
-              <div className="bg-black/20 p-3 rounded-xl text-[10px] font-black uppercase text-center">Business</div>
-              <div className="bg-black/20 p-3 rounded-xl text-[10px] font-black uppercase text-center">Gaming</div>
-              <div className="bg-black/20 p-3 rounded-xl text-[10px] font-black uppercase text-center">Workstation</div>
-              <div className="bg-black/20 p-3 rounded-xl text-[10px] font-black uppercase text-center">Student</div>
+          <div className="bg-brand-blue text-white rounded-3xl p-8 flex flex-col justify-between group shadow-lg shadow-brand-blue/20">
+            <h4 className="text-2xl font-extrabold leading-snug uppercase">500+ Latest <br />Models In Store</h4>
+            <div className="grid grid-cols-2 gap-2.5 mt-8">
+              <div className="bg-white/15 backdrop-blur-sm p-3 rounded-xl text-xs font-bold uppercase text-center">Business</div>
+              <div className="bg-white/15 backdrop-blur-sm p-3 rounded-xl text-xs font-bold uppercase text-center">Developer</div>
+              <div className="bg-white/15 backdrop-blur-sm p-3 rounded-xl text-xs font-bold uppercase text-center">High Spec</div>
+              <div className="bg-white/15 backdrop-blur-sm p-3 rounded-xl text-xs font-bold uppercase text-center">Student</div>
             </div>
           </div>
         </div>

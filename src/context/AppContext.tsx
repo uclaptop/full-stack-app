@@ -1,16 +1,22 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Product {
-  id: number;
+  id: number | string;
   name: string;
-  brand: string;
-  specs: string;
-  category: string;
-  tag: string;
-  price: string;
+  brand?: string;
+  specs?: string;
+  category?: string;
+  tag?: string;
+  price?: number | string;
+  mrp?: number | string;
   image_url: string;
-  sort_order: number;
-  is_active: boolean;
+  secondary_image_url?: string;
+  gallery_images?: string;
+  is_trending?: boolean;
+  description?: string;
+  sku?: string;
+  sort_order?: number;
+  is_active?: boolean;
 }
 
 interface StockItem {
@@ -37,6 +43,18 @@ interface WhyPoint {
   is_active: boolean;
 }
 
+export interface CartItem {
+  id: number | string;
+  name: string;
+  brand?: string;
+  specs?: string;
+  price?: number | string;
+  mrp?: number | string;
+  image_url?: string;
+  secondary_image_url?: string;
+  quantity: number;
+}
+
 interface AppContextType {
   products: Product[];
   stockItems: StockItem[];
@@ -44,6 +62,14 @@ interface AppContextType {
   whyPoints: WhyPoint[];
   content: Record<string, string>;
   loading: boolean;
+  cart: CartItem[];
+  addToCart: (product: any) => void;
+  removeFromCart: (id: number | string) => void;
+  updateQuantity: (id: number | string, delta: number) => void;
+  clearCart: () => void;
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
+  cartCount: number;
   refreshProducts: () => void;
   refreshStock: () => void;
   refreshServices: () => void;
@@ -157,9 +183,77 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('uc_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('uc_cart', JSON.stringify(cart));
+    } catch (e) {
+      console.error('Failed to save cart to localStorage', e);
+    }
+  }, [cart]);
+
+  const cartCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+
+  const addToCart = (product: any) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === (product.id || product.name));
+      if (existing) {
+        return prev.map((item) =>
+          item.id === (product.id || product.name)
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [
+        ...prev,
+        {
+          id: product.id || product.name,
+          name: product.name,
+          brand: product.brand || '',
+          specs: product.specs || '',
+          price: product.price || '',
+          image_url: product.image_url || product.image || '',
+          quantity: 1,
+        },
+      ];
+    });
+    setIsCartOpen(true);
+  };
+
+  const removeFromCart = (id: number | string) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateQuantity = (id: number | string, delta: number) => {
+    setCart((prev) =>
+      prev
+        .map((item) => {
+          if (item.id === id) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean) as CartItem[]
+    );
+  };
+
+  const clearCart = () => setCart([]);
+
   return (
     <AppContext.Provider value={{
       products, stockItems, services, whyPoints, content, loading,
+      cart, addToCart, removeFromCart, updateQuantity, clearCart,
+      isCartOpen, setIsCartOpen, cartCount,
       refreshProducts,
       refreshStock,
       refreshServices,

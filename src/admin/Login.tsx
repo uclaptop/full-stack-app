@@ -157,17 +157,13 @@ export default function AdminLogin() {
         {/* Center Card Container */}
         <div className="my-auto py-6 max-w-sm w-full mx-auto">
           
-          {/* Logo Brand Header with /logo.jpg */}
-          <div className="flex items-center gap-3.5 mb-8">
+          {/* Logo Brand Header with /logo.png */}
+          <div className="flex items-center mb-8">
             <img 
-              src="/logo.jpg" 
+              src="/logo.png" 
               alt="Universal Computers Logo" 
-              className="w-12 h-12 rounded-xl object-contain shadow-md border border-slate-100" 
+              className="h-14 w-auto max-w-[280px] object-contain drop-shadow-sm" 
             />
-            <div>
-              <h1 className="text-lg font-black uppercase tracking-wider leading-none text-slate-900">UNIVERSAL</h1>
-              <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em] block mt-1">COMPUTERS</span>
-            </div>
           </div>
 
           <AnimatePresence mode="wait">
