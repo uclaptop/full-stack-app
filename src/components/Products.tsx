@@ -6,14 +6,15 @@ import {
 } from 'lucide-react';
 import { products as staticProducts } from '../data/products';
 import { useApp } from '../context/AppContext';
+import { resolveProductImage, resolveProductPrice, resolveProductMrp } from '../utils/productUtils';
 
 // ── Auto-Scrolling Image Stage Component for Quick Look ──
 const QuickLookCarousel = ({ product, formatPrice }: { product: any, formatPrice: (n: number) => string }) => {
   const images = useMemo(() => {
-    const primary = product.image;
-    const secondary = product.secondaryImage;
+    const primary = resolveProductImage(product.image, product.name);
+    const secondary = product.secondaryImage ? resolveProductImage(product.secondaryImage, product.name) : '';
     const gallery = product.galleryImages 
-      ? product.galleryImages.split(',').map((s: string) => s.trim()).filter(Boolean) 
+      ? product.galleryImages.split(',').map((s: string) => resolveProductImage(s.trim(), product.name)).filter(Boolean) 
       : [];
     return [primary, secondary, ...gallery].filter(Boolean);
   }, [product]);
@@ -64,6 +65,7 @@ const QuickLookCarousel = ({ product, formatPrice }: { product: any, formatPrice
           src={images[currentIdx]}
           alt={`${product.name} - View ${currentIdx + 1}`}
           className="w-full h-full object-contain"
+          onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
         />
       </AnimatePresence>
 
@@ -116,8 +118,8 @@ export const ProductsSection = () => {
     let list: any[] = [];
     if (dbProducts && dbProducts.length > 0) {
       list = dbProducts.map((p) => {
-        const price = Number(p.price) || 24999;
-        const mrp = Number(p.mrp) || 65000;
+        const price = resolveProductPrice(p.price, p.name);
+        const mrp = resolveProductMrp(p.mrp, price, p.name);
         return {
           id: String(p.id),
           name: p.name,
@@ -130,20 +132,27 @@ export const ProductsSection = () => {
           mrp,
           savings: Math.max(0, mrp - price),
           discountPercent: mrp > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0,
-          image: p.image_url || '/Hp probook 640 G5.png',
-          secondaryImage: p.secondary_image_url || '',
+          image: resolveProductImage(p.image_url, p.name),
+          secondaryImage: p.secondary_image_url ? resolveProductImage(p.secondary_image_url, p.name) : '',
           galleryImages: p.gallery_images || '',
         };
       });
     } else {
-      list = staticProducts.map((p) => ({
-        ...p,
-        isTrending: true,
-        savings: Math.max(0, p.mrp - p.price),
-        discountPercent: p.mrp > 0 ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0,
-        secondaryImage: p.secondary_image || '',
-        galleryImages: '',
-      }));
+      list = staticProducts.map((p) => {
+        const price = resolveProductPrice(p.price, p.name);
+        const mrp = resolveProductMrp(p.mrp, price, p.name);
+        return {
+          ...p,
+          price,
+          mrp,
+          isTrending: true,
+          savings: Math.max(0, mrp - price),
+          discountPercent: mrp > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0,
+          image: resolveProductImage(p.image, p.name),
+          secondaryImage: p.secondary_image ? resolveProductImage(p.secondary_image, p.name) : '',
+          galleryImages: '',
+        };
+      });
     }
 
     // When the admin enables trending toggle on products, display ONLY those products!
@@ -256,6 +265,7 @@ export const ProductsSection = () => {
                     alt={product.name}
                     className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105 relative z-0"
                     loading="lazy"
+                    onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
                   />
                 </div>
 

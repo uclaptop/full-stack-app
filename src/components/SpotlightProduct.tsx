@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { products as staticProducts } from '../data/products';
 import { useApp } from '../context/AppContext';
+import { resolveProductImage, resolveProductPrice, resolveProductMrp } from '../utils/productUtils';
 
 export const SpotlightProduct: React.FC = () => {
   const { products: dbProducts, addToCart } = useApp();
@@ -21,9 +22,11 @@ export const SpotlightProduct: React.FC = () => {
 
     // 2. Otherwise find the product with the highest savings margin (MRP - Price)
     const sorted = [...list].sort((a: any, b: any) => {
-      const savingsA = (Number(a.mrp) || 0) - (Number(a.price) || 0);
-      const savingsB = (Number(b.mrp) || 0) - (Number(b.price) || 0);
-      return savingsB - savingsA;
+      const priceA = resolveProductPrice(a.price, a.name);
+      const mrpA = resolveProductMrp(a.mrp, priceA, a.name);
+      const priceB = resolveProductPrice(b.price, b.name);
+      const mrpB = resolveProductMrp(b.mrp, priceB, b.name);
+      return (mrpB - priceB) - (mrpA - priceA);
     });
 
     return sorted[0] || list[0];
@@ -31,16 +34,17 @@ export const SpotlightProduct: React.FC = () => {
 
   // Build the array of multiple gallery images for this featured product (ONLY authentic DB images)
   const galleryImages = useMemo(() => {
-    if (!featuredProduct) return [];
+    if (!featuredProduct) return ['/dell-latitude-5420.png'];
 
-    const primary = (featuredProduct as any).image_url || (featuredProduct as any).image;
+    const primary = resolveProductImage((featuredProduct as any).image_url || (featuredProduct as any).image, featuredProduct.name);
     const secondary = (featuredProduct as any).secondary_image_url || (featuredProduct as any).secondary_image;
+    const resolvedSecondary = secondary ? resolveProductImage(secondary, featuredProduct.name) : '';
     const extra = (featuredProduct as any).gallery_images 
-      ? (featuredProduct as any).gallery_images.split(',').map((s: string) => s.trim()).filter(Boolean)
+      ? (featuredProduct as any).gallery_images.split(',').map((s: string) => resolveProductImage(s.trim(), featuredProduct.name)).filter(Boolean)
       : [];
 
-    const list = [primary, secondary, ...extra].filter(Boolean);
-    return list.length > 0 ? list : [primary || '/Dell Latitude 5420.png'];
+    const list = [primary, resolvedSecondary, ...extra].filter(Boolean);
+    return list.length > 0 ? list : [primary || '/dell-latitude-5420.png'];
   }, [featuredProduct]);
 
   // Reset active image when product changes
@@ -50,8 +54,8 @@ export const SpotlightProduct: React.FC = () => {
 
   if (!featuredProduct) return null;
 
-  const price = Number((featuredProduct as any).price) || 33434;
-  const mrp = Number((featuredProduct as any).mrp) || 86000;
+  const price = resolveProductPrice((featuredProduct as any).price, featuredProduct.name);
+  const mrp = resolveProductMrp((featuredProduct as any).mrp, price, featuredProduct.name);
   const savings = Math.max(0, mrp - price);
   const sku = (featuredProduct as any).sku || `EPW-DL5410-I7-10TH`;
   const description = (featuredProduct as any).description || 
@@ -99,11 +103,12 @@ export const SpotlightProduct: React.FC = () => {
                   src={galleryImages[activeImageIndex]}
                   alt={featuredProduct.name}
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
                 />
               </AnimatePresence>
             </div>
 
-            {/* Thumbnail Strip with Navigation Arrows (Only shown if multiple authentic images exist) */}
+            {/* Thumbnail Strip with Navigation Arrows */}
             {galleryImages.length > 1 && (
               <div className="flex items-center justify-between gap-2 pt-1 px-2">
                 <button
@@ -129,6 +134,7 @@ export const SpotlightProduct: React.FC = () => {
                         src={img}
                         alt={`Thumbnail ${idx + 1}`}
                         className="w-full h-full object-contain rounded-xl"
+                        onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
                       />
                     </button>
                   ))}
@@ -143,7 +149,6 @@ export const SpotlightProduct: React.FC = () => {
                 </button>
               </div>
             )}
-
           </div>
 
           {/* ── RIGHT COLUMN (Product Title, Pricing & Value Benefit Icons) ── */}

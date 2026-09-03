@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Trash2, Plus, Minus, ShoppingBag, MessageSquare, ArrowRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { resolveProductImage } from '../utils/productUtils';
 
 export const CartDrawer: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, isCartOpen, setIsCartOpen, content } = useApp();
@@ -111,9 +112,10 @@ export const CartDrawer: React.FC = () => {
                       className="flex gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 transition-all group"
                     >
                       <img
-                        src={item.image_url || '/Dell Latitude 3570.png'}
+                        src={resolveProductImage(item.image_url || (item as any).image, item.name)}
                         alt={item.name}
                         className="w-20 h-20 object-contain rounded-xl bg-white p-1 border border-slate-100 flex-shrink-0"
+                        onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
                       />
                       <div className="flex-1 min-w-0 flex flex-col justify-between">
                         <div>

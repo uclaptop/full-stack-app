@@ -9,7 +9,7 @@
       "destination": "https://full-stack-app-evnw.onrender.com/uploads/$1"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api|uploads|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]

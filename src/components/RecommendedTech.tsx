@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, MessageSquare, Plus } from 'lucide-react';
 import { products as staticProducts } from '../data/products';
 import { useApp } from '../context/AppContext';
+import { resolveProductImage, resolveProductPrice, resolveProductMrp } from '../utils/productUtils';
 
 export const RecommendedTech = () => {
   const { products: dbProducts, addToCart } = useApp();
@@ -11,8 +12,8 @@ export const RecommendedTech = () => {
   const displayProducts = useMemo(() => {
     if (dbProducts && dbProducts.length > 0) {
       return dbProducts.map((p) => {
-        const price = Number(p.price) || 24999;
-        const mrp = Number(p.mrp) || 65000;
+        const price = resolveProductPrice(p.price, p.name);
+        const mrp = resolveProductMrp(p.mrp, price, p.name);
         return {
           id: String(p.id),
           name: p.name,
@@ -23,14 +24,21 @@ export const RecommendedTech = () => {
           price,
           mrp,
           savings: Math.max(0, mrp - price),
-          image: p.image_url || '/Hp probook 640 G5.png',
+          image: resolveProductImage(p.image_url, p.name),
         };
       });
     }
-    return staticProducts.map((p) => ({
-      ...p,
-      savings: Math.max(0, p.mrp - p.price),
-    }));
+    return staticProducts.map((p) => {
+      const price = resolveProductPrice(p.price, p.name);
+      const mrp = resolveProductMrp(p.mrp, price, p.name);
+      return {
+        ...p,
+        price,
+        mrp,
+        savings: Math.max(0, mrp - price),
+        image: resolveProductImage(p.image, p.name),
+      };
+    });
   }, [dbProducts]);
 
   const itemsPerPage = 6;
@@ -121,6 +129,7 @@ export const RecommendedTech = () => {
                       alt={product.name}
                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
                     />
                   </div>
 
