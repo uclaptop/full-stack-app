@@ -2,11 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://full-stack-app-evnw.onrender.com/api/$1"
-    },
-    {
-      "source": "/uploads/(.*)",
-      "destination": "https://full-stack-app-evnw.onrender.com/uploads/$1"
+      "destination": "/api"
     },
     {
       "source": "/((?!api|uploads|.*\\..*).*)",
