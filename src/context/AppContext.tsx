@@ -96,6 +96,7 @@ const defaultContent: Record<string, string> = {
   'about.stat1_value': '1k+', 'about.stat1_label': 'Customers',
   'about.stat2_value': '500+', 'about.stat2_label': 'Models',
   'about.stat3_value': '#1', 'about.stat3_label': 'Rated',
+  'contact.email': 'uclaptopstore@gmail.com',
   'contact.phone': '+91 87121 73339',
   'contact.whatsapp_number': '918712173339',
   'contact.address_line1': 'D.No 14/331, Church Complex Upstairs',

@@ -13,7 +13,7 @@ export const Contact = () => {
   const phoneRaw = content['contact.phone_raw'] || '8712173339';
   const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
   const addressCity = content['contact.address_city'] || 'Proddatur, AP 516360';
-  const email = content['contact.email'] || 'info@universalcomputers.com';
+  const email = content['contact.email'] || 'uclaptopstore@gmail.com';
   
   const instagram = content['footer.instagram_url'] || 'https://www.instagram.com/_universal_computers_';
   const youtube = content['footer.youtube_url'] || 'https://www.youtube.com/@UniversalComputerspdtr';
@@ -262,7 +262,7 @@ export const MapSection = () => {
   const phone = content['contact.phone'] || '+91 87121 73339';
   const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
   const addressCity = content['contact.address_city'] || 'Proddatur, AP 516360';
-  const email = content['contact.email'] || 'info@universalcomputers.com';
+  const email = content['contact.email'] || 'uclaptopstore@gmail.com';
 
   return (
     <section id="map" className="w-full bg-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 font-['Inter',sans-serif]">
@@ -337,7 +337,7 @@ export const Footer = () => {
   const phoneRaw = content['contact.phone_raw'] || '8712173339';
   const addressLine1 = content['contact.address_line1'] || 'D.No 14/331, Church Complex Upstairs';
   const addressCity = content['contact.address_city'] || 'Proddatur, AP 516360';
-  const email = content['contact.email'] || 'info@universalcomputers.com';
+  const email = content['contact.email'] || 'uclaptopstore@gmail.com';
   const weekday = content['footer.hours_weekday'] || 'MON-SAT 9:00 AM - 8:30 PM';
   const weekend = content['footer.hours_weekend'] || 'SUN 10:00 AM - 6:00 PM';
   
@@ -421,10 +421,19 @@ export const Footer = () => {
             <div className="space-y-2 text-xs text-slate-300">
               <p className="font-semibold text-white">{weekday}</p>
               <p className="text-[#E8A93B] font-semibold">{weekend}</p>
-              <p className="text-slate-400 pt-2 leading-relaxed">
+              <p className="text-slate-400 pt-1 leading-relaxed">
                 {addressLine1},<br />
                 {addressCity}
               </p>
+              <div className="pt-2">
+                <a 
+                  href={`mailto:${email}`} 
+                  className="inline-flex items-center gap-2 text-xs text-slate-300 hover:text-[#E8A93B] transition-colors font-medium"
+                >
+                  <Mail className="w-3.5 h-3.5 text-[#E8A93B] shrink-0" />
+                  <span>{email}</span>
+                </a>
+              </div>
             </div>
 
             {/* Social Icons */}

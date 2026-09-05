@@ -11,73 +11,9 @@ import { Footer } from '../components/InfoSections';
 import { useApp } from '../context/AppContext';
 import { products as staticProducts } from '../data/products';
 import { resolveProductImage, resolveProductPrice, resolveProductMrp } from '../utils/productUtils';
+import { ProductQuickLookModal } from '../components/ProductQuickLookModal';
 
-// Auto-Scrolling Image Stage for Quick Look Modal
-const QuickLookCarousel = ({ product, formatPrice }: { product: any, formatPrice: (n: number) => string }) => {
-  const images = useMemo(() => {
-    const primary = resolveProductImage(product.image, product.name);
-    const secondary = product.secondaryImage ? resolveProductImage(product.secondaryImage, product.name) : '';
-    const gallery = product.galleryImages 
-      ? product.galleryImages.split(',').map((s: string) => resolveProductImage(s.trim(), product.name)).filter(Boolean) 
-      : [];
-    return [primary, secondary, ...gallery].filter(Boolean);
-  }, [product]);
-
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (images.length <= 1 || isPaused) return;
-    const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % images.length);
-    }, 2800);
-    return () => clearInterval(timer);
-  }, [images.length, isPaused]);
-
-  return (
-    <div 
-      className="bg-white h-72 sm:h-80 flex items-center justify-center p-6 relative overflow-hidden group select-none border-b border-slate-100"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      {product.savings > 0 && (
-        <span className="absolute top-4 left-4 z-10 bg-[#85221b] text-white text-xs font-bold px-3 py-1 rounded shadow-sm font-['Inter',sans-serif]">
-          Save {formatPrice(product.savings)}
-        </span>
-      )}
-
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={currentIdx}
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 0.35 }}
-          src={images[currentIdx]}
-          alt={`${product.name} - View ${currentIdx + 1}`}
-          className="w-full h-full object-contain"
-          onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
-        />
-      </AnimatePresence>
-
-      {images.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-black/30 backdrop-blur-xs px-2.5 py-1 rounded-full">
-          {images.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIdx(idx)}
-              className={`h-2 rounded-full transition-all cursor-pointer ${
-                idx === currentIdx ? 'w-5 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'
-              }`}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default function AllProductsPage() {
+export const AllProductsPage = () => {
   const { products: dbProducts, addToCart } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') || 'All';
@@ -271,19 +207,25 @@ export default function AllProductsPage() {
                     )}
 
                     <button
-                      onClick={() => setQuickLookProduct(product)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setQuickLookProduct(product);
+                      }}
                       className="absolute top-3 right-3 z-10 text-xs font-semibold text-slate-700 hover:text-brand-blue underline cursor-pointer bg-white/80 hover:bg-white backdrop-blur-xs px-2.5 py-0.5 rounded-md shadow-2xs transition-colors"
                     >
                       Quick Look
                     </button>
 
-                    <img
-                      src={currentImg}
-                      alt={product.name}
-                      className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105 relative z-0"
-                      loading="lazy"
-                      onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
-                    />
+                    {/* Product Photo - Click navigates to details page */}
+                    <Link to={`/product/${product.id}`} className="w-full h-full flex items-center justify-center">
+                      <img
+                        src={currentImg}
+                        alt={product.name}
+                        className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105 relative z-0"
+                        loading="lazy"
+                        onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
+                      />
+                    </Link>
                   </div>
 
                   {/* Bottom Info Block */}
@@ -293,9 +235,12 @@ export default function AllProductsPage() {
                         Universal Computers
                       </span>
 
-                      <h3 className="text-sm font-semibold text-[#111827] line-clamp-2 leading-snug mb-2 min-h-[38px] group-hover:text-brand-blue transition-colors">
-                        {product.name}
-                      </h3>
+                      {/* Product Name - Click navigates to details page */}
+                      <Link to={`/product/${product.id}`}>
+                        <h3 className="text-sm font-semibold text-[#111827] line-clamp-2 leading-snug mb-2 min-h-[38px] hover:text-brand-blue transition-colors">
+                          {product.name}
+                        </h3>
+                      </Link>
 
                       <div className="flex items-center justify-center gap-2 flex-wrap mb-4">
                         <span className="text-sm sm:text-base font-bold text-[#111827]">
@@ -336,85 +281,17 @@ export default function AllProductsPage() {
 
       </main>
 
-      {/* Quick Look Modal */}
-      <AnimatePresence>
-        {quickLookProduct && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm font-['Inter',sans-serif]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 relative font-['Inter',sans-serif]"
-            >
-              <button
-                onClick={() => setQuickLookProduct(null)}
-                className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-md transition-colors cursor-pointer"
-                title="Close modal"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              <QuickLookCarousel product={quickLookProduct} formatPrice={formatPrice} />
-
-              <div className="p-6">
-                <span className="text-xs text-slate-400 font-medium uppercase tracking-wider block mb-1">
-                  {quickLookProduct.brand} • {quickLookProduct.category}
-                </span>
-                <h3 className="text-base font-bold text-slate-900 leading-snug mb-3">
-                  {quickLookProduct.name}
-                </h3>
-
-                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-4">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                    Technical Specifications
-                  </span>
-                  <p className="text-xs text-slate-700 font-normal leading-relaxed">
-                    {quickLookProduct.specs || 'Tested A+++ Refurbished Condition with Original Charger'}
-                  </p>
-                </div>
-
-                <div className="flex items-baseline justify-between mb-6 pb-4 border-b border-slate-100">
-                  <div>
-                    <span className="text-xs text-slate-500 block">Offer Selling Price</span>
-                    <span className="text-2xl font-bold text-[#0B1E3D]">
-                      {formatPrice(quickLookProduct.price)}
-                    </span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-500 block">Showroom MRP</span>
-                    <span className="text-sm text-red-600 line-through font-normal">
-                      {formatPrice(quickLookProduct.mrp)}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      addToCart(quickLookProduct);
-                      setQuickLookProduct(null);
-                    }}
-                    className="flex-1 py-3.5 bg-[#0B1E3D] hover:bg-[#133da6] text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#0B1E3D]/20 cursor-pointer active:scale-95 transition-all"
-                  >
-                    <ShoppingBag className="w-4 h-4" /> Add to Cart
-                  </button>
-
-                  <a
-                    href={`https://wa.me/918712173339?text=Hi Universal Computers, I want to purchase ${encodeURIComponent(quickLookProduct.name)} (Price: ${formatPrice(quickLookProduct.price)})`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/20 active:scale-95 transition-all"
-                  >
-                    <MessageSquare className="w-4 h-4" /> WhatsApp
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* Quick Look Modal (Exact Template Match) */}
+      {quickLookProduct && (
+        <ProductQuickLookModal
+          product={quickLookProduct}
+          onClose={() => setQuickLookProduct(null)}
+        />
+      )}
 
       <Footer />
     </div>
   );
-}
+};
+
+export default AllProductsPage;

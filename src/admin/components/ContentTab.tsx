@@ -68,6 +68,7 @@ const SECTIONS = [
     color: 'green',
     icon: Phone,
     fields: [
+      { key: 'contact.email', label: 'Official Store Email (e.g. uclaptopstore@gmail.com)' },
       { key: 'contact.phone', label: 'Phone Number (display)' },
       { key: 'contact.whatsapp_number', label: 'WhatsApp Number (digits only, e.g. 918712173339)' },
       { key: 'contact.address_line1', label: 'Address Line 1' },

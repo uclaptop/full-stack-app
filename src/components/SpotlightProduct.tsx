@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { 
   ChevronLeft, ChevronRight, ShoppingBag, MessageSquare, 
   Truck, RefreshCw, PackageCheck, ArrowRight 
@@ -240,12 +241,12 @@ export const SpotlightProduct: React.FC = () => {
             </div>
 
             <div>
-              <a
-                href="#products"
+              <Link
+                to={`/product/${featuredProduct.id}`}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-800 hover:text-brand-blue transition-colors pt-2 font-['Inter',sans-serif]"
               >
                 View Product Details <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              </Link>
             </div>
 
           </div>

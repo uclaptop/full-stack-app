@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, MessageSquare, Plus } from 'lucide-react';
 import { products as staticProducts } from '../data/products';
 import { useApp } from '../context/AppContext';
@@ -123,7 +124,10 @@ export const RecommendedTech = () => {
                   className="bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 p-3 sm:p-4 flex items-center gap-4 hover:shadow-md transition-all duration-300 group relative font-['Inter',sans-serif]"
                 >
                   {/* Left Square Pure White Image Stage (Amazon Style) */}
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-white border border-slate-100 p-2 flex items-center justify-center shrink-0 overflow-hidden">
+                  <Link 
+                    to={`/product/${product.id}`}
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-white border border-slate-100 p-2 flex items-center justify-center shrink-0 overflow-hidden cursor-pointer"
+                  >
                     <img
                       src={product.image}
                       alt={product.name}
@@ -131,7 +135,7 @@ export const RecommendedTech = () => {
                       loading="lazy"
                       onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
                     />
-                  </div>
+                  </Link>
 
                   {/* Right Metadata Block */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5 font-['Inter',sans-serif]">
@@ -154,9 +158,11 @@ export const RecommendedTech = () => {
                       </div>
 
                       {/* Product Title */}
-                      <h3 className="text-xs sm:text-sm font-semibold text-slate-800 line-clamp-2 leading-snug mt-1 group-hover:text-brand-blue transition-colors font-['Inter',sans-serif]">
-                        {product.name}
-                      </h3>
+                      <Link to={`/product/${product.id}`}>
+                        <h3 className="text-xs sm:text-sm font-semibold text-slate-800 line-clamp-2 leading-snug mt-1 hover:text-brand-blue transition-colors font-['Inter',sans-serif]">
+                          {product.name}
+                        </h3>
+                      </Link>
                     </div>
 
                     {/* Quick Action Bar */}

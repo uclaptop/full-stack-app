@@ -174,6 +174,7 @@ async function seed() {
       { section: 'about', key: 'body', value: 'Universal Computers (UC) has been a leading technological hub for over 9 years. Our focus has always been on bridging the gap between premium tech and affordable pricing.' },
       { section: 'about', key: 'badge_text', value: '9+ Years' },
       { section: 'about', key: 'badge_sub', value: 'of Trusted Excellence' },
+      { section: 'contact', key: 'email', value: 'uclaptopstore@gmail.com' },
       { section: 'contact', key: 'phone', value: '+91 87121 73339' },
       { section: 'contact', key: 'phone_raw', value: '8712173339' },
       { section: 'contact', key: 'whatsapp_number', value: '918712173339' },

@@ -24,24 +24,89 @@ export default function ImageUploader({ currentImage = '', onImageSelected, labe
 
   const token = localStorage.getItem('uc_admin_token');
 
+  const compressImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const maxWidth = 1600;
+          const maxHeight = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth || height > maxHeight) {
+            if (width / height > maxWidth / maxHeight) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            resolve(dataUrl);
+          } else {
+            resolve(event.target?.result as string);
+          }
+        };
+        img.onerror = () => resolve(event.target?.result as string);
+      };
+      reader.onerror = () => {
+        // Fallback
+        resolve('');
+      };
+    });
+  };
+
   const handleLocalUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
     setError('');
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
-      setPreview(data.url);
-      setUrlInput(data.url);
-      onImageSelected(data.url);
+      // First compress the image for high speed & web optimization
+      const compressedDataUrl = await compressImageFile(file);
+      
+      // Try backend server upload if available
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.url) {
+            setPreview(data.url);
+            setUrlInput(data.url);
+            onImageSelected(data.url);
+            return;
+          }
+        }
+      } catch {
+        // Server upload endpoint unreachable or on serverless lambda, use optimized Base64
+      }
+
+      // If backend disk upload isn't available, use the compressed Data URL
+      if (compressedDataUrl) {
+        setPreview(compressedDataUrl);
+        setUrlInput(compressedDataUrl);
+        onImageSelected(compressedDataUrl);
+      } else {
+        throw new Error('Could not process selected image.');
+      }
     } catch (err: any) {
       setError(err.message || 'Error uploading file');
     } finally {

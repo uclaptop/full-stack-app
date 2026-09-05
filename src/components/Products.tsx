@@ -1,111 +1,14 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { 
   ChevronLeft, ChevronRight, ShoppingBag, MessageSquare, 
-  X, Check, ShieldCheck, Zap
+  Check, ShieldCheck, Zap
 } from 'lucide-react';
 import { products as staticProducts } from '../data/products';
 import { useApp } from '../context/AppContext';
 import { resolveProductImage, resolveProductPrice, resolveProductMrp } from '../utils/productUtils';
-
-// ── Auto-Scrolling Image Stage Component for Quick Look ──
-const QuickLookCarousel = ({ product, formatPrice }: { product: any, formatPrice: (n: number) => string }) => {
-  const images = useMemo(() => {
-    const primary = resolveProductImage(product.image, product.name);
-    const secondary = product.secondaryImage ? resolveProductImage(product.secondaryImage, product.name) : '';
-    const gallery = product.galleryImages 
-      ? product.galleryImages.split(',').map((s: string) => resolveProductImage(s.trim(), product.name)).filter(Boolean) 
-      : [];
-    return [primary, secondary, ...gallery].filter(Boolean);
-  }, [product]);
-
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Auto-scroll images slowly every 2.8 seconds
-  useEffect(() => {
-    if (images.length <= 1 || isPaused) return;
-
-    const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % images.length);
-    }, 2800);
-
-    return () => clearInterval(timer);
-  }, [images.length, isPaused]);
-
-  const nextImg = () => {
-    setCurrentIdx((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImg = () => {
-    setCurrentIdx((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  return (
-    <div 
-      className="bg-white h-72 sm:h-80 flex items-center justify-center p-6 relative overflow-hidden group select-none border-b border-slate-100"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      {/* Top Left Maroon Savings Badge */}
-      {product.savings > 0 && (
-        <span className="absolute top-4 left-4 z-10 bg-[#85221b] text-white text-xs font-bold px-3 py-1 rounded shadow-sm font-['Inter',sans-serif]">
-          Save {formatPrice(product.savings)}
-        </span>
-      )}
-
-      {/* Auto-Rotating Image with Smooth Fade Animation */}
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={currentIdx}
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 0.35 }}
-          src={images[currentIdx]}
-          alt={`${product.name} - View ${currentIdx + 1}`}
-          className="w-full h-full object-contain"
-          onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
-        />
-      </AnimatePresence>
-
-      {/* Navigation Controls (If multiple images exist) */}
-      {images.length > 1 && (
-        <>
-          <button
-            onClick={prevImg}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-700 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-10"
-            title="Previous image"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          <button
-            onClick={nextImg}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-700 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-10"
-            title="Next image"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-
-          {/* Bottom Dot Indicators */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-black/30 backdrop-blur-xs px-2.5 py-1 rounded-full">
-            {images.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIdx(idx)}
-                className={`h-2 rounded-full transition-all cursor-pointer ${
-                  idx === currentIdx ? 'w-5 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'
-                }`}
-                title={`Angle ${idx + 1}`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
+import { ProductQuickLookModal } from './ProductQuickLookModal';
 
 export const ProductsSection = () => {
   const { products: dbProducts, addToCart } = useApp();
@@ -183,7 +86,7 @@ export const ProductsSection = () => {
     <section id="products" className="w-full bg-[#f9fafb] py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 font-['Inter',sans-serif]">
       <div className="max-w-7xl mx-auto">
         
-        {/* ─── SECTION HEADER (Exact Match to Reference Screenshot) ─── */}
+        {/* ─── SECTION HEADER ─── */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#111827] tracking-normal mb-1 font-['Inter',sans-serif]">
@@ -196,12 +99,12 @@ export const ProductsSection = () => {
 
           {/* Navigation Controls */}
           <div className="flex items-center gap-4 self-end sm:self-auto font-['Inter',sans-serif]">
-            <a 
-              href="/products"
+            <Link 
+              to="/products"
               className="text-xs sm:text-sm font-bold text-[#111827] hover:text-[#133da6] underline transition-colors cursor-pointer"
             >
               View All Pieces
-            </a>
+            </Link>
 
             <div className="flex items-center gap-2">
               <button
@@ -222,7 +125,7 @@ export const ProductsSection = () => {
           </div>
         </div>
 
-        {/* ─── PRODUCT CAROUSEL / ROW (Exact Match to Reference Screenshot) ─── */}
+        {/* ─── PRODUCT CAROUSEL / ROW ─── */}
         <div 
           ref={scrollContainerRef}
           className="flex gap-4 sm:gap-5 overflow-x-auto pb-6 scroll-smooth snap-x snap-mandatory scrollbar-none"
@@ -253,20 +156,25 @@ export const ProductsSection = () => {
 
                   {/* Top-Right Quick Look Action */}
                   <button
-                    onClick={() => setQuickLookProduct(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setQuickLookProduct(product);
+                    }}
                     className="absolute top-3 right-3 z-10 text-xs font-semibold text-slate-700 hover:text-brand-blue underline cursor-pointer bg-white/80 hover:bg-white backdrop-blur-xs px-2.5 py-0.5 rounded-md shadow-2xs transition-colors font-['Inter',sans-serif]"
                   >
                     Quick Look
                   </button>
 
-                  {/* Product Photo */}
-                  <img
-                    src={currentImg}
-                    alt={product.name}
-                    className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105 relative z-0"
-                    loading="lazy"
-                    onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
-                  />
+                  {/* Product Photo - Click navigates to details page */}
+                  <Link to={`/product/${product.id}`} className="w-full h-full flex items-center justify-center">
+                    <img
+                      src={currentImg}
+                      alt={product.name}
+                      className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105 relative z-0"
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.src = '/hp-probook-640-g5.png'; }}
+                    />
+                  </Link>
                 </div>
 
                 {/* ── BOTTOM METADATA & PRICING CONTAINER ── */}
@@ -277,10 +185,12 @@ export const ProductsSection = () => {
                       Universal Computers
                     </span>
 
-                    {/* Product Name */}
-                    <h3 className="text-sm font-semibold text-[#111827] line-clamp-2 leading-snug mb-2 min-h-[38px] group-hover:text-brand-blue transition-colors font-['Inter',sans-serif]">
-                      {product.name}
-                    </h3>
+                    {/* Product Name - Click navigates to details page */}
+                    <Link to={`/product/${product.id}`}>
+                      <h3 className="text-sm font-semibold text-[#111827] line-clamp-2 leading-snug mb-2 min-h-[38px] hover:text-brand-blue transition-colors font-['Inter',sans-serif]">
+                        {product.name}
+                      </h3>
+                    </Link>
 
                     {/* Price Row: Selling Price + Struck Red MRP */}
                     <div className="flex items-center justify-center gap-2 flex-wrap mb-4 font-['Inter',sans-serif]">
@@ -322,92 +232,13 @@ export const ProductsSection = () => {
 
       </div>
 
-      {/* ─── QUICK LOOK MODAL (WITH SLOW AUTO-SCROLLING MULTI-IMAGE CAROUSEL) ─── */}
-      <AnimatePresence>
-        {quickLookProduct && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm font-['Inter',sans-serif]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 relative font-['Inter',sans-serif]"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setQuickLookProduct(null)}
-                className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-md transition-colors cursor-pointer"
-                title="Close modal"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              {/* ── AUTO-SCROLLING PRODUCT IMAGE STAGE ── */}
-              <QuickLookCarousel 
-                product={quickLookProduct} 
-                formatPrice={formatPrice} 
-              />
-
-              {/* Details & Specs */}
-              <div className="p-6 font-['Inter',sans-serif]">
-                <span className="text-xs text-slate-400 font-medium uppercase tracking-wider block mb-1">
-                  {quickLookProduct.brand} • {quickLookProduct.category}
-                </span>
-                <h3 className="text-base font-bold text-slate-900 leading-snug mb-3 font-['Inter',sans-serif]">
-                  {quickLookProduct.name}
-                </h3>
-
-                {/* Specs Box */}
-                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-4">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                    Technical Specifications
-                  </span>
-                  <p className="text-xs text-slate-700 font-normal leading-relaxed font-['Inter',sans-serif]">
-                    {quickLookProduct.specs || 'Tested A+++ Refurbished Condition with Original Charger'}
-                  </p>
-                </div>
-
-                {/* Pricing Box */}
-                <div className="flex items-baseline justify-between mb-6 pb-4 border-b border-slate-100 font-['Inter',sans-serif]">
-                  <div>
-                    <span className="text-xs text-slate-500 block">Offer Selling Price</span>
-                    <span className="text-2xl font-bold text-[#0B1E3D]">
-                      {formatPrice(quickLookProduct.price)}
-                    </span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-500 block">Showroom MRP</span>
-                    <span className="text-sm text-red-600 line-through font-normal">
-                      {formatPrice(quickLookProduct.mrp)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-3 font-['Inter',sans-serif]">
-                  <button
-                    onClick={() => {
-                      addToCart(quickLookProduct);
-                      setQuickLookProduct(null);
-                    }}
-                    className="flex-1 py-3.5 bg-[#0B1E3D] hover:bg-[#133da6] text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#0B1E3D]/20 cursor-pointer active:scale-95 transition-all"
-                  >
-                    <ShoppingBag className="w-4 h-4" /> Add to Cart
-                  </button>
-
-                  <a
-                    href={`https://wa.me/918712173339?text=Hi Universal Computers, I want to purchase ${encodeURIComponent(quickLookProduct.name)} (Price: ${formatPrice(quickLookProduct.price)})`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/20 active:scale-95 transition-all"
-                  >
-                    <MessageSquare className="w-4 h-4" /> WhatsApp
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* ─── QUICK LOOK MODAL (MATCHING EXACT SCREENSHOT TEMPLATE) ─── */}
+      {quickLookProduct && (
+        <ProductQuickLookModal
+          product={quickLookProduct}
+          onClose={() => setQuickLookProduct(null)}
+        />
+      )}
     </section>
   );
 };

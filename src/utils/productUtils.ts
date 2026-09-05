@@ -1,6 +1,7 @@
 /**
  * Universal product helper to resolve and normalize image paths,
- * handle fallbacks for legacy/broken upload URLs, and sanitize prices.
+ * handle fallbacks for legacy/broken upload URLs, sanitize prices,
+ * and build structured multi-angle galleries.
  */
 
 export function resolveProductImage(imgUrl?: string, productName: string = ''): string {
@@ -42,7 +43,7 @@ export function resolveProductImage(imgUrl?: string, productName: string = ''): 
   return encodeURI(cleanPath);
 }
 
-function getFallbackForName(name: string): string {
+export function getFallbackForName(name: string): string {
   const lower = (name || '').toLowerCase();
   if (lower.includes('5580')) return '/dell-latitude-5580.png';
   if (lower.includes('7480') || lower.includes('7540')) return '/dell-latitude-7540.png';
@@ -61,6 +62,37 @@ function getFallbackForName(name: string): string {
   if (lower.includes('mac') || lower.includes('apple')) return '/dell-latitude-5420.png';
 
   return '/hp-probook-640-g5.png';
+}
+
+export function resolveProductGallery(product: any): string[] {
+  if (!product) return ['/hp-probook-640-g5.png'];
+
+  const name = product.name || '';
+  const primary = resolveProductImage(product.image_url || product.image, name);
+  const secondary = product.secondary_image_url || product.secondaryImage 
+    ? resolveProductImage(product.secondary_image_url || product.secondaryImage, name) 
+    : '';
+
+  const rawGallery = product.gallery_images || product.galleryImages || '';
+  const extraList = typeof rawGallery === 'string' && rawGallery.trim() !== ''
+    ? rawGallery.split(',').map((s: string) => resolveProductImage(s.trim(), name)).filter(Boolean)
+    : [];
+
+  const combined = [primary, secondary, ...extraList].filter(Boolean);
+  const unique = Array.from(new Set(combined));
+
+  // If we only have 1 or 2 images, fill up with complementary view angles or repeat cleanly
+  if (unique.length === 1) {
+    return [unique[0], unique[0], unique[0], unique[0]];
+  }
+  if (unique.length === 2) {
+    return [unique[0], unique[1], unique[0], unique[1]];
+  }
+  if (unique.length === 3) {
+    return [unique[0], unique[1], unique[2], unique[0]];
+  }
+
+  return unique;
 }
 
 export function resolveProductPrice(priceRaw: any, name: string = ''): number {
@@ -98,4 +130,27 @@ export function resolveProductMrp(mrpRaw: any, price: number, name: string = '')
   if (lower.includes('3570')) return 48000;
 
   return Math.round(price * 2.2);
+}
+
+export function generateProductTags(product: any): string {
+  const brand = product.brand || 'Dell';
+  const name = product.name || '';
+  const category = product.category || 'Laptop';
+  
+  return [
+    `Affordable ${brand.toLowerCase()} ${category.toLowerCase()}`,
+    `Business ${category.toLowerCase()} india`,
+    `Universal Computers`,
+    `Refurbished ${brand.toLowerCase()} ${category.toLowerCase()}`,
+    `Refurbished ${category.toLowerCase()} with warranty`,
+    `Renewed ${name.split(' ').slice(0, 3).join(' ').toLowerCase()}`,
+    `Used ${brand.toLowerCase()} ${category.toLowerCase()}`
+  ].join(', ');
+}
+
+export function generateWhatsAppOrderUrl(productName: string, price: number, whatsappNumber: string = '918712173339'): string {
+  const text = encodeURIComponent(
+    `Hello Universal Computers! I would like to order "${productName}" (Rs. ${price.toLocaleString('en-IN')}). Please provide payment & delivery details.`
+  );
+  return `https://wa.me/${whatsappNumber}?text=${text}`;
 }

@@ -6,6 +6,7 @@ import {
   LogOut, Menu, X, ChevronRight, ClipboardList, Activity, ExternalLink, Sparkles
 } from 'lucide-react';
 import ProductsTab from './components/ProductsTab';
+import BannersTab from './components/BannersTab';
 import StockTab from './components/StockTab';
 import ServicesTab from './components/ServicesTab';
 import WhyTab from './components/WhyTab';
@@ -14,6 +15,7 @@ import TickersTab from './components/TickersTab';
 
 const tabs = [
   { id: 'products', label: 'Products Inventory', icon: Package, desc: 'Manage stock & pricing' },
+  { id: 'banners', label: 'Hero Banners', icon: LayoutDashboard, desc: 'Edit slides & banner photos' },
   { id: 'tickers', label: 'Scrolling Ticker Bars', icon: Sparkles, desc: 'Edit running banner texts' },
   { id: 'content', label: 'Store Content', icon: FileText, desc: 'Titles, hours & phone numbers' },
 ];
@@ -33,6 +35,7 @@ export default function Dashboard() {
   const renderTab = () => {
     switch (activeTab) {
       case 'products': return <ProductsTab />;
+      case 'banners': return <BannersTab />;
       case 'tickers': return <TickersTab />;
       case 'content': return <ContentTab />;
       default: return <ProductsTab />;
